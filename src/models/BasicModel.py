@@ -12,7 +12,7 @@ import time
 import src.networks as nets
 from math import log10
 import skimage.io
-from skimage.measure import compare_psnr,compare_ssim
+from skimage.metrics import peak_signal_noise_ratio as compare_psnr, structural_similarity as compare_ssim
 
 from evaluation import AverageMeter
 import pytorch_ssim as pytorch_ssim
