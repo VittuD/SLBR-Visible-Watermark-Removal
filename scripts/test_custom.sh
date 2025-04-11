@@ -8,7 +8,7 @@ INPUT_SIZE=256
 NAME=slbr_v1
 TEST_DIR=/content/data
 
-CUDA_VISIBLE_DEVICES=1 python3  test_custom.py \
+CUDA_VISIBLE_DEVICES=0 python3  test_custom.py \
   --name ${NAME} \
   --nets slbr \
   --models slbr \
