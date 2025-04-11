@@ -6,7 +6,7 @@ MASK_MODE=res
 
 INPUT_SIZE=256
 NAME=slbr_v1
-TEST_DIR=/media/sda/Watermark
+TEST_DIR=/content/data
 
 CUDA_VISIBLE_DEVICES=1 python3  test_custom.py \
   --name ${NAME} \
@@ -23,6 +23,6 @@ CUDA_VISIBLE_DEVICES=1 python3  test_custom.py \
   --use_refine \
   --k_refine ${K_REFINE} \
   --k_skip_stage ${K_SKIP} \
-  --resume /media/sda/Watermark/${NAME}/model_best.pth.tar \
+  --resume /content/model_best.pth.tar \
   --test_dir ${TEST_DIR} 
   
