@@ -46,6 +46,32 @@ def save_output(inputs, preds, save_dir, img_fn, extra_infos=None,  verbose=Fals
         out_fn = os.path.join(save_dir, "{}{}".format(os.path.splitext(img_fn)[0], os.path.splitext(img_fn)[1]))
         cv2.imwrite(out_fn, outimg)
 
+def save_output_separate(inputs, preds, save_dir, img_fn, extra_infos=None, verbose=False):
+    # Extract and convert images
+    image = inputs['I']
+    image = cv2.cvtColor(tensor2np(image)[0], cv2.COLOR_RGB2BGR)
+
+    bg_pred = preds['bg']
+    bg_pred = cv2.cvtColor(tensor2np(bg_pred)[0], cv2.COLOR_RGB2BGR)
+
+    mask_pred = tensor2np(preds['mask'], isMask=True)[0]
+
+    # Prepare filenames
+    base_name, ext = os.path.splitext(os.path.basename(img_fn))
+    out_fn_original = os.path.join(save_dir, f"{base_name}_original{ext}")
+    out_fn_modified = os.path.join(save_dir, f"{base_name}_modified{ext}")
+    out_fn_mask = os.path.join(save_dir, f"{base_name}_mask{ext}")
+
+    if verbose:
+        cv2.imshow("Original", image)
+        cv2.imshow("Modified", bg_pred)
+        cv2.imshow("Mask", mask_pred)
+        cv2.waitKey(0)
+    else:
+        cv2.imwrite(out_fn_original, image)
+        cv2.imwrite(out_fn_modified, bg_pred)
+        cv2.imwrite(out_fn_mask, mask_pred)
+	    
 def preprocess(file_path, img_size=512):
     img_J = cv2.imread(file_path)
     assert img_J is not None, "NoneType"
@@ -99,7 +125,7 @@ def main(args):
             immask = immask_all[0]
 
             imfinal =imoutput*immask + model.norm(inputs)*(1-immask)
-            save_output(
+            save_output_separate(
                 inputs = {'I':inputs},
                 preds = {'bg':imfinal, 'mask':immask},
                 save_dir= prediction_dir,
