@@ -46,7 +46,7 @@ def save_output(inputs, preds, save_dir, img_fn, extra_infos=None,  verbose=Fals
         out_fn = os.path.join(save_dir, "{}{}".format(os.path.splitext(img_fn)[0], os.path.splitext(img_fn)[1]))
         cv2.imwrite(out_fn, outimg)
 
-def save_output_separate_dirs(inputs, preds, save_dir, img_fn, extra_infos=None, verbose=False):
+def save_output_separate(inputs, preds, save_dir, img_fn, extra_infos=None, verbose=False):
     # Convert tensor to numpy and prepare images
     image = cv2.cvtColor(tensor2np(inputs['I'])[0], cv2.COLOR_RGB2BGR)
     bg_pred = cv2.cvtColor(tensor2np(preds['bg'])[0], cv2.COLOR_RGB2BGR)
