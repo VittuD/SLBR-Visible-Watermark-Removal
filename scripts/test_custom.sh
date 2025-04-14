@@ -23,6 +23,6 @@ CUDA_VISIBLE_DEVICES=0 python3  test_custom.py \
   --use_refine \
   --k_refine ${K_REFINE} \
   --k_skip_stage ${K_SKIP} \
-  --resume /content/model_best.pth.tar \
+  --resume /content/drive/MyDrive/SLBR/model_best.pth.tar \
   --test_dir ${TEST_DIR} 
   
