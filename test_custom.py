@@ -46,21 +46,28 @@ def save_output(inputs, preds, save_dir, img_fn, extra_infos=None,  verbose=Fals
         out_fn = os.path.join(save_dir, "{}{}".format(os.path.splitext(img_fn)[0], os.path.splitext(img_fn)[1]))
         cv2.imwrite(out_fn, outimg)
 
-def save_output_separate(inputs, preds, save_dir, img_fn, extra_infos=None, verbose=False):
-    # Extract and convert images
-    image = inputs['I']
-    image = cv2.cvtColor(tensor2np(image)[0], cv2.COLOR_RGB2BGR)
-
-    bg_pred = preds['bg']
-    bg_pred = cv2.cvtColor(tensor2np(bg_pred)[0], cv2.COLOR_RGB2BGR)
-
+def save_output_separate_dirs(inputs, preds, save_dir, img_fn, extra_infos=None, verbose=False):
+    # Convert tensor to numpy and prepare images
+    image = cv2.cvtColor(tensor2np(inputs['I'])[0], cv2.COLOR_RGB2BGR)
+    bg_pred = cv2.cvtColor(tensor2np(preds['bg'])[0], cv2.COLOR_RGB2BGR)
     mask_pred = tensor2np(preds['mask'], isMask=True)[0]
 
-    # Prepare filenames
-    base_name, ext = os.path.splitext(os.path.basename(img_fn))
-    out_fn_original = os.path.join(save_dir, f"{base_name}_original{ext}")
-    out_fn_modified = os.path.join(save_dir, f"{base_name}_modified{ext}")
-    out_fn_mask = os.path.join(save_dir, f"{base_name}_mask{ext}")
+    # Prepare filename
+    base_name = os.path.basename(img_fn)
+
+    # Create target directories if they don't exist
+    original_dir = os.path.join(save_dir, "original")
+    modified_dir = os.path.join(save_dir, "modified")
+    mask_dir = os.path.join(save_dir, "mask")
+
+    os.makedirs(original_dir, exist_ok=True)
+    os.makedirs(modified_dir, exist_ok=True)
+    os.makedirs(mask_dir, exist_ok=True)
+
+    # Full paths for saving
+    out_fn_original = os.path.join(original_dir, base_name)
+    out_fn_modified = os.path.join(modified_dir, base_name)
+    out_fn_mask = os.path.join(mask_dir, base_name)
 
     if verbose:
         cv2.imshow("Original", image)
@@ -71,6 +78,7 @@ def save_output_separate(inputs, preds, save_dir, img_fn, extra_infos=None, verb
         cv2.imwrite(out_fn_original, image)
         cv2.imwrite(out_fn_modified, bg_pred)
         cv2.imwrite(out_fn_mask, mask_pred)
+
 	    
 def preprocess(file_path, img_size=512):
     img_J = cv2.imread(file_path)
